@@ -2,3 +2,5 @@
 .Rhistory
 .RData
 .Ruserdata
+activity_*.txt
+activity_*.zip
