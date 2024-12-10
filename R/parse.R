@@ -4,19 +4,19 @@
 #'
 #' @param infile a .zip or .txt file with the format activity_BabyName_yyyymm
 #'	as the BabyTime app exports data.
-#' @param list_db a list object on which to append data. If none exists, this
-#'	will create a new list object.
+#' @param list_db a `Raw BT List DB` object on which to append data. If none exists, this
+#'	will create a new `Raw BT List DB` object.
 #' @param verbose whether or not to write out progress messages.
 #'
-#' @return a populated `list_db` list object
+#' @return a populated `Raw BT List DB` object
 #' @export
 #'
 #' @examples
 #' \notrun{
 #' baby_dann_db <- read_one_bt_activity_file(
-#'     infile = here::here('Data', activity_Dann_202305.zip')
+#'   infile = here::here('Data', 'activity_Dann_202305.zip')
 #' ) |>
-#' clean_bt_list_db()
+#'     clean_bt_list_db()
 #' }
 read_one_bt_activity_file <- function(
 		infile, list_db = NULL, verbose = FALSE
@@ -28,7 +28,7 @@ read_one_bt_activity_file <- function(
 		unzip(infile, exdir = dirname(infile))
 		infile <- gsub('\\.zip','.txt',infile)
 	}
-	if (!grepl('activity_[A-Za-z]*_[0-9]{6}\\.(zip|txt)',basename(infile))) {
+	if (!grepl('activity_[A-Za-z]*_20[0-9]{2}(0[1-9]|1[0-2])\\.(zip|txt)',basename(infile))) {
 		stop('Not a BabyTime Activity File\nMust be a file name "activity_BabyName_yyyymm.txt"')
 	}
 	# Open Connection
@@ -45,7 +45,7 @@ read_one_bt_activity_file <- function(
 		if (verbose) {
 			print(glue::glue("{i}: {one_line}"))
 		}
-		if (one_line == "==================== ") {
+		if (stringr::str_trim(one_line) == "====================") {
 			if (length(one_block) == 1) {
 				# Just a date and nothing else. skip to next
 				one_block <- character(0)
@@ -66,7 +66,7 @@ read_one_bt_activity_file <- function(
 				}
 				# Merge Memo into a single thing
 				if (grepl('^Memo:', thisline)) {
-					thisline <- str_trim(paste(one_block[j:length(one_block)], collapse = '\t'))
+					thisline <- stringr::str_trim(paste(one_block[j:length(one_block)], collapse = '\t'))
 				}
 
 				key_val <- stringr::str_trim(stringr::str_split(thisline, ': ')[[1]])
@@ -97,10 +97,11 @@ read_one_bt_activity_file <- function(
 		i <- i + 1
 	}
 	close(con)
+	class(list_db) <- 'Raw BT List DB'
 	return(list_db)
 }
 
-#' Title
+#' Clean BabyTime List DB File
 #'
 #' @param list_db output from `read_one_bt_activity_file`
 #'
@@ -110,7 +111,7 @@ read_one_bt_activity_file <- function(
 #' @examples
 #' \notrun{
 #' baby_dann_db <- read_one_bt_activity_file(
-#'     infile = here::here('Data', activity_Dann_202305.zip')
+#'     infile = here::here('Data', 'activity_Dann_202305.zip')
 #' ) |>
 #' clean_bt_list_db()
 #' }
@@ -119,21 +120,34 @@ clean_bt_list_db <- function(list_db) {
 	# First, combine like things
 	## Sleep
 	tables <- names(list_db)[grepl('Sleep$', names(list_db))]
-	x <- bind_rows(list_db[tables])
-	list_db[tables] <- NULL
-	list_db$Sleep <- x
+	x <- dplyr::bind_rows(list_db[tables])
+	if (nrow(x) > 0) {
+		list_db[tables] <- NULL
+		list_db$Sleep <- x
+	}
 	## Breastfeeding
 	tables <- names(list_db)[grepl('^Breastfeeding', names(list_db))]
 	x <- dplyr::bind_rows(list_db[tables])
-	list_db[tables] <- NULL
-	list_db$Breastfeeding <- x
+	if (nrow(x) > 0) {
+		list_db[tables] <- NULL
+		list_db$Breastfeeding <- x
+	}
 
 	## Clean Names and add Baby Name as a column
 	names(list_db) <- snakecase::to_snake_case(names(list_db))
 	for (i in names(list_db)) {
-		list_db[[i]] <- janitor::clean_names(list_db[[i]])
-		list_db[[i]] <- dplyr::mutate(list_db[[i]], baby_name = baby_name, .before = start_dttm)
-
+		temp_df <- list_db[[i]]
+		if (nrow(temp_df) > 0) {
+			temp_df <- janitor::clean_names(temp_df)
+			if (is.element('duration', names(temp_df))) {
+				temp_df <- dplyr::rename(temp_df, duration_min = duration)
+			}
+			temp_df <- dplyr::mutate(
+				temp_df,
+				across(dplyr::ends_with(c('_ml', '_min', '_oz')), ~ readr::parse_number(.x))
+			)
+			list_db[[i]]  <- temp_df
+		}
 	}
 	class(list_db) <- 'Clean BT List DB'
 	return(list_db)
