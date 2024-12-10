@@ -1,11 +1,19 @@
 Package: babyTimeR
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Parse Output from BabyTime Application
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Author: Dann Hekman [aut, cre]
+Maintainer: Dann Hekman <dannhek@gmail.com>
+Description: BabyTime is an application for tracking infant and toddler 
+	care activities like sleeping, eating, etc. This package will take the 
+	outputted .zip files and parse it into a usable list object with cleaned
+	data. It handles errored data and incomplete data gracefully and is designed
+	to parse one directory at a time.
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
+Suggests: 
+    testthat (>= 3.0.0), 
+    tidyverse (>= 2.0.0)
+Config/testthat/edition: 3
+RoxygenNote: 7.3.2
