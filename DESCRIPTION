@@ -9,7 +9,7 @@ Description: BabyTime is an application for tracking infant and toddler
 	outputted .zip files and parse it into a usable list object with cleaned
 	data. It handles errored data and incomplete data gracefully and is designed
 	to parse one directory at a time.
-License: What license is it under?
+License: CC-BY
 Encoding: UTF-8
 LazyData: true
 Suggests: 
