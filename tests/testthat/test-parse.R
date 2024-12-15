@@ -32,6 +32,9 @@ Pumping Right Amount(ml): 5 (fl_oz)
 Type: Pumped Milk
 Pumped Milk Total Amount(ml): 5 (fl_oz)
 ====================
+2024-10-03
+Here's some garbage data
+====================
 2024-10-26 11:58 PM ~ 2024-10-27 02:19 AM
 Type: Night Sleep
 Duration: 140 (min)
@@ -40,6 +43,8 @@ Duration: 140 (min)
 Type: Medicine
 Medicine type: Analgesic
 Memo: Tylenol
+====================
+2024-10-26 10:06 PM ~ 2024-10-26 10:26 PM
 ====================
 2024-10-26 10:06 PM ~ 2024-10-26 10:26 PM
 Type: Pumping
@@ -58,6 +63,30 @@ Pumped Milk Total Amount(ml): 5 (fl_oz)
 Memo: Spilled a little
 mixed with cow's milk
 ====================
+2024-10-22 05:22 PM
+Type: Baby Food
+Chicken, Vegetables, Yogurt, Fruit: None (None)
+====================
+2024-10-29 04:30 PM ~ 2024-10-29 04:39 PM
+Type: Breastfeeding (right)
+Duration: 8 (min)
+Breastfeeding Right: 8 (min)
+====================
+2024-10-29 04:13 PM ~ 2024-10-29 04:25 PM
+Type: Breastfeeding
+Duration: 11 (min)
+====================
+2024-10-27 08:02 PM
+Type: Breastfeeding (left)
+Duration: 8 (min)
+Breastfeeding Left: 8 (min)
+====================
+2024-10-18 03:16 PM ~ 2024-10-18 03:26 PM
+Type: Breastfeeding (both)
+Duration: 10 (min)
+Breastfeeding Left: 5 (min)
+Breastfeeding Right: 5 (min)
+====================
 "
 	sink('activity_Dann_202410.txt')
 	cat(x)
@@ -67,26 +96,45 @@ mixed with cow's milk
 	testthat::expect_true(file.exists('activity_Dann_202410.zip'))
 })
 
+testthat::test_that('Test Fake Names', {
+	testthat::expect_error({
+		file.create('activity_Dann_20240.txt')
+		list_db <- read_one_bt_activity_file(
+			infile = file.path('activity_Dann_20240.txt')
+		)
+	})
+	file.remove('activity_Dann_20240.txt')
+	testthat::expect_error({
+		list_db <- read_one_bt_activity_file(
+			infile = file.path('activity_Dann_202403.txt')
+		)
+	})
+})
 testthat::test_that('Read in Test txt File', {
-	list_db <- read_one_bt_activity_file(
-		infile = file.path('activity_Dann_202410.txt')
-	)
+	testthat::expect_warning({
+		list_db <- read_one_bt_activity_file(
+			infile = file.path('activity_Dann_202410.txt')
+		)
+	})
 	testthat::expect_equal(class(list_db), 'Raw BT List DB')
-	testthat::expect_equal(length(list_db), 6)
+	testthat::expect_equal(length(list_db), 11)
 	list_db <- list_db |>
 		clean_bt_list_db()
 	testthat::expect_equal(class(list_db), 'Clean BT List DB')
-	testthat::expect_equal(length(list_db), 5)
+	testthat::expect_equal(length(list_db), 7)
 	saveRDS(list_db, file.path('test_list_db.RDS'))
 	testthat::expect_true(file.exists(file.path('test_list_db.RDS')))
 })
 
 testthat::test_that('Read in Test zip File', {
-	list_db <- read_one_bt_activity_file(
-		infile = file.path('activity_Dann_202410.zip')
-	)
+	testthat::expect_warning({
+		list_db <- read_one_bt_activity_file(
+			infile = file.path('activity_Dann_202410.zip'),
+			verbose = TRUE
+		)
+	})
 	testthat::expect_equal(class(list_db), 'Raw BT List DB')
-	testthat::expect_equal(length(list_db), 6)
+	testthat::expect_equal(length(list_db), 11)
 })
 
 testthat::test_that('Multi-line Memo', {
@@ -119,3 +167,57 @@ testthat::test_that('Accurate Data (Last Analgesia)', {
 		lubridate::ymd_hms('2024-10-26 23:13:00', tz = 'America/Detroit')
 	)
 })
+
+
+testthat::test_that('Accurate Data (Baby Food)', {
+	list_db <- readRDS('test_list_db.RDS')
+	had_veggies <- max(dplyr::case_when(
+		stringr::str_detect(list_db$baby_food$food_type, 'Vegetables') ~ 1,
+		.default = 0
+	), na.rm = TRUE)
+	testthat::expect_equal(had_veggies, 1)
+})
+
+
+testthat::test_that('Accurate Data (Breastfeeding)', {
+	list_db <- readRDS('test_list_db.RDS')
+	total_duration <- sum(list_db$breastfeeding$duration_min)
+	left_duration <- sum(readr::parse_number(list_db$breastfeeding$breastfeeding_left), na.rm = TRUE)
+	right_duration <- sum(readr::parse_number(list_db$breastfeeding$breastfeeding_right), na.rm = TRUE)
+
+	testthat::expect_equal(total_duration, 37)
+	testthat::expect_equal(left_duration, 13)
+	testthat::expect_equal(right_duration, 13)
+})
+
+
+testthat::test_that('Combine Lists', {
+	list_db1 <- readRDS('test_list_db.RDS')
+	list_db2 <- readRDS('test_list_db.RDS')
+	list_db_comb <- combine_clean_bt_list_dbs(
+		list_db1,
+		list_db2
+	)
+	testthat::expect_equal(
+		nrow(list_db_comb$sleep),
+		nrow(list_db1$sleep) + nrow(list_db2$sleep)
+	)
+	testthat::expect_error({
+		combine_clean_bt_list_dbs(
+			'i am a string, not a cleaned babytime list',
+			list_db2
+		)
+	})
+	testthat::expect_error({
+		combine_clean_bt_list_dbs(
+			list_db1,
+			'i am a string, not a cleaned babytime list'
+		)
+	})
+})
+
+
+#Remove Test Files
+	file.remove('activity_Dann_202410.txt')
+	file.remove('activity_Dann_202410.zip')
+	file.remove('test_list_db.RDS')
