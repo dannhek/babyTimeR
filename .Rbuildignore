@@ -5,3 +5,5 @@
 ^\.Rproj\.user$
 ^dev$
 ^LICENSE.md
+^revdep$
+^cran-comments\.md$
