@@ -92,7 +92,7 @@ read_one_bt_activity_file <- function(
 			}
 			# Push Block into table within the list_db variable
 			if (is.null(block_list[['Type']])) {
-				warning(glue::glue('Could not process line {i} of {basename(infile)}. Missing value for Type.'))
+				message(glue::glue('Could not process line {i} of {basename(infile)}. Missing value for Type.'))
 			} else {
 				if (is.null(list_db[[block_list$Type]])) {
 					list_db[[block_list$Type]] <- dplyr::as_tibble(block_list)
