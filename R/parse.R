@@ -9,10 +9,19 @@
 #' @param verbose whether or not to write out progress messages.
 #'
 #' @return a populated `Raw BT List DB` object
+#' @importFrom utils unzip
+#' @importFrom glue glue
+#' @importFrom stringr str_extract_all
+#' @importFrom stringr str_trim
+#' @importFrom stringr str_split
+#' @importFrom lubridate ymd_hm
+#' @importFrom snakecase to_snake_case
+#' @importFrom dplyr as_tibble
+#' @importFrom dplyr bind_rows
 #' @export
 #'
 #' @examples
-#' \notrun{
+#' \dontrun{
 #' baby_dann_db <- read_one_bt_activity_file(
 #'   infile = here::here('Data', 'activity_Dann_202305.zip')
 #' ) |>
@@ -25,7 +34,7 @@ read_one_bt_activity_file <- function(
 		stop(glue::glue('File {infile} does not exist.'))
 	}
 	if (grepl('\\.zip$',infile)) {
-		unzip(infile, exdir = dirname(infile))
+		utils::unzip(infile, exdir = dirname(infile))
 		infile <- gsub('\\.zip','.txt',infile)
 	}
 	if (!grepl('activity_[A-Za-z]*_20[0-9]{2}(0[1-9]|1[0-2])\\.(zip|txt)',basename(infile))) {
@@ -70,7 +79,10 @@ read_one_bt_activity_file <- function(
 				}
 
 				key_val <- stringr::str_trim(stringr::str_split(thisline, ': ')[[1]])
-				if (key_val[1] != '') {
+				if (one_block[2] == 'Type: Baby Food' & j == 3) {
+					block_list['Food Type'] <- key_val[1]
+					block_list['Amount'] <- key_val[2]
+				} else if (key_val[1] != '') {
 					block_list[[key_val[1]]] <- key_val[2]
 				}
 				if (key_val[1] == 'Memo') {
@@ -106,10 +118,13 @@ read_one_bt_activity_file <- function(
 #' @param list_db output from `read_one_bt_activity_file`
 #'
 #' @return a Clean BT List DB object
+#' @import dplyr
+#' @importFrom readr parse_number
+#' @importFrom janitor clean_names
 #' @export
 #'
 #' @examples
-#' \notrun{
+#' \dontrun{
 #' baby_dann_db <- read_one_bt_activity_file(
 #'     infile = here::here('Data', 'activity_Dann_202305.zip')
 #' ) |>
@@ -140,11 +155,17 @@ clean_bt_list_db <- function(list_db) {
 		if (nrow(temp_df) > 0) {
 			temp_df <- janitor::clean_names(temp_df)
 			if (is.element('duration', names(temp_df))) {
-				temp_df <- dplyr::rename(temp_df, duration_min = duration)
+				temp_df <- dplyr::rename_with(temp_df,
+					.fn = \(x) paste0(x, '_min'),
+					.cols = dplyr::contains('duration')
+				)
 			}
 			temp_df <- dplyr::mutate(
 				temp_df,
-				across(dplyr::ends_with(c('_ml', '_min', '_oz')), ~ readr::parse_number(.x))
+				dplyr::across(
+					dplyr::ends_with(c('_ml', '_min', '_oz')),
+					~ readr::parse_number(.x)
+				)
 			)
 			list_db[[i]]  <- temp_df
 		}
@@ -163,16 +184,18 @@ clean_bt_list_db <- function(list_db) {
 #' @param lb another Clean BT List DB object
 #'
 #' @return a Clean BT List DB object that contains all elements from `la` and `lb`
+#' @importFrom dplyr bind_rows
+#' @importFrom methods is
 #' @export
 #'
 #' @examples
-#' \notrun{
+#' \dontrun{
 #' baby_dann_db_may <- read_one_bt_activity_file(
-#'     infile = here::here('Data', activity_Dann_202305.zip')
+#'     infile = here::here('Data', 'activity_Dann_202305.zip')
 #' ) |>
 #' clean_bt_list_db()
 #' baby_dann_db_june <- read_one_bt_activity_file(
-#'     infile = here::here('Data', activity_Dann_202306.zip')
+#'     infile = here::here('Data', 'activity_Dann_202306.zip')
 #' ) |>
 #' clean_bt_list_db()
 #' baby_dann_db <- combine_clean_bt_list_dbs(
@@ -181,10 +204,10 @@ clean_bt_list_db <- function(list_db) {
 #' )
 #' }
 combine_clean_bt_list_dbs <- function(la,lb) {
-	if (class(la) != 'Clean BT List DB') {
+	if (!methods::is(la, 'Clean BT List DB')) {
 		stop("First Parameter not a cleaned BabyTime List Database\nUse the output of `clean_bt_list_db`")
 	}
-	if (class(lb) != 'Clean BT List DB') {
+	if (!methods::is(lb, 'Clean BT List DB')) {
 		stop("Second Parameter not a cleaned BabyTime List Database\nUse the output of `clean_bt_list_db`")
 	}
 	lc <- list()
