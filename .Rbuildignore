@@ -4,3 +4,4 @@
 \.git.*
 ^\.Rproj\.user$
 ^dev$
+^LICENSE.md
