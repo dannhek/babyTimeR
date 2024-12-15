@@ -16,7 +16,7 @@ a Clean BT List DB object
 Clean BabyTime List DB File
 }
 \examples{
-\notrun{
+\dontrun{
 baby_dann_db <- read_one_bt_activity_file(
     infile = here::here('Data', 'activity_Dann_202305.zip')
 ) |>

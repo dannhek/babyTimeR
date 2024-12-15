@@ -20,7 +20,7 @@ Clean BT List DB object (and also write it to the `out` RDS file)
 Only works with with .zip files
 }
 \examples{
-\notrun{
+\dontrun{
 if (file.exists('parsed_data.RDS')) {
     baby_dann_db <- readRDS('parsed_data.RDS')
 } else {
