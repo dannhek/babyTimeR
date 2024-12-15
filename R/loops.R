@@ -8,9 +8,10 @@
 #'
 #' @return Clean BT List DB object (and also write it to the `out` RDS file)
 #' @export
+#' @importFrom stringr str_replace
 #'
 #' @examples
-#' \notrun{
+#' \dontrun{
 #' if (file.exists('parsed_data.RDS')) {
 #'     baby_dann_db <- readRDS('parsed_data.RDS')
 #' } else {
@@ -23,8 +24,8 @@ process_one_directory <- function(
 		verbose = TRUE
 ) {
 	list_db <- list()
-	txt_files <- list.files(directory, pattern = 'activity_[A-Za-z]*_[0-9]{6}\\.txt', full.name = T)
-	zip_files <- list.files(directory, pattern = 'activity_[A-Za-z]*_[0-9]{6}\\.zip', full.name = T)
+	txt_files <- list.files(directory, pattern = 'activity_[A-Za-z]*_[0-9]{6}\\.txt', full.names = T)
+	zip_files <- list.files(directory, pattern = 'activity_[A-Za-z]*_[0-9]{6}\\.zip', full.names = T)
 	if (remove_txts) {
 		if (verbose) {
 			message(paste0(
