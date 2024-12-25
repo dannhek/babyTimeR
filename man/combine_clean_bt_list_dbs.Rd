@@ -21,11 +21,11 @@ combining data extracted at multiple times or across multiple directories
 \examples{
 \dontrun{
 baby_dann_db_may <- read_one_bt_activity_file(
-    infile = here::here('Data', 'activity_Dann_202305.zip')
+    infile = file.path('Data', 'activity_Dann_202305.zip')
 ) |>
 clean_bt_list_db()
 baby_dann_db_june <- read_one_bt_activity_file(
-    infile = here::here('Data', 'activity_Dann_202306.zip')
+    infile = file.path('Data', 'activity_Dann_202306.zip')
 ) |>
 clean_bt_list_db()
 baby_dann_db <- combine_clean_bt_list_dbs(

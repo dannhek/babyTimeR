@@ -23,7 +23,7 @@
 #' @examples
 #' \dontrun{
 #' baby_dann_db <- read_one_bt_activity_file(
-#'   infile = here::here('Data', 'activity_Dann_202305.zip')
+#'   infile = file.path('Data', 'activity_Dann_202305.zip')
 #' ) |>
 #'     clean_bt_list_db()
 #' }
@@ -126,7 +126,7 @@ read_one_bt_activity_file <- function(
 #' @examples
 #' \dontrun{
 #' baby_dann_db <- read_one_bt_activity_file(
-#'     infile = here::here('Data', 'activity_Dann_202305.zip')
+#'     infile = file.path('Data', 'activity_Dann_202305.zip')
 #' ) |>
 #' clean_bt_list_db()
 #' }
@@ -191,11 +191,11 @@ clean_bt_list_db <- function(list_db) {
 #' @examples
 #' \dontrun{
 #' baby_dann_db_may <- read_one_bt_activity_file(
-#'     infile = here::here('Data', 'activity_Dann_202305.zip')
+#'     infile = file.path('Data', 'activity_Dann_202305.zip')
 #' ) |>
 #' clean_bt_list_db()
 #' baby_dann_db_june <- read_one_bt_activity_file(
-#'     infile = here::here('Data', 'activity_Dann_202306.zip')
+#'     infile = file.path('Data', 'activity_Dann_202306.zip')
 #' ) |>
 #' clean_bt_list_db()
 #' baby_dann_db <- combine_clean_bt_list_dbs(
