@@ -21,12 +21,12 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' data_dir <- system.file('extdata', package = 'babyTimeR')
 #' baby_dann_db <- read_one_bt_activity_file(
-#'   infile = file.path('Data', 'activity_Dann_202305.zip')
+#'   infile = file.path(data_dir, 'activity_Dann_202411.txt')
 #' ) |>
 #'     clean_bt_list_db()
-#' }
+#' names(baby_dann_db)
 read_one_bt_activity_file <- function(
 		infile, list_db = NULL, verbose = FALSE
 ) {
@@ -124,12 +124,12 @@ read_one_bt_activity_file <- function(
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' data_dir <- system.file('extdata', package = 'babyTimeR')
 #' baby_dann_db <- read_one_bt_activity_file(
-#'     infile = file.path('Data', 'activity_Dann_202305.zip')
+#'   infile = file.path(data_dir, 'activity_Dann_202411.txt')
 #' ) |>
-#' clean_bt_list_db()
-#' }
+#'     clean_bt_list_db()
+#' names(baby_dann_db)
 clean_bt_list_db <- function(list_db) {
 	## Now that we've parsed the file into a list, clean the list
 	# First, combine like things
@@ -189,7 +189,7 @@ clean_bt_list_db <- function(list_db) {
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' baby_dann_db_may <- read_one_bt_activity_file(
 #'     infile = file.path('Data', 'activity_Dann_202305.zip')
 #' ) |>

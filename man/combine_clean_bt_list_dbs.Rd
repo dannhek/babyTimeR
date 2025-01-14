@@ -19,7 +19,7 @@ Generally not needed if you parse all files at once, but can be useful if
 combining data extracted at multiple times or across multiple directories
 }
 \examples{
-\dontrun{
+\donttest{
 baby_dann_db_may <- read_one_bt_activity_file(
     infile = file.path('Data', 'activity_Dann_202305.zip')
 ) |>

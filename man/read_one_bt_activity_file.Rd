@@ -22,10 +22,10 @@ a populated `Raw BT List DB` object
 Read line-by-line and parse into a "database" in a list.
 }
 \examples{
-\dontrun{
+data_dir <- system.file('extdata', package = 'babyTimeR')
 baby_dann_db <- read_one_bt_activity_file(
-  infile = file.path('Data', 'activity_Dann_202305.zip')
+  infile = file.path(data_dir, 'activity_Dann_202411.txt')
 ) |>
     clean_bt_list_db()
-}
+names(baby_dann_db)
 }

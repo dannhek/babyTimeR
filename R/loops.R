@@ -11,12 +11,11 @@
 #' @importFrom stringr str_replace
 #'
 #' @examples
-#' \dontrun{
+#' data_dir <- system.file('extdata', package = 'babyTimeR')
 #' if (file.exists('parsed_data.RDS')) {
 #'     baby_dann_db <- readRDS('parsed_data.RDS')
 #' } else {
-#'     baby_dann_db <- process_one_directory('Data')
-#' }
+#'     baby_dann_db <- process_one_directory(data_dir)
 #' }
 process_one_directory <- function(
 		directory,
