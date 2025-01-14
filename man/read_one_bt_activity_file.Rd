@@ -2,13 +2,13 @@
 % Please edit documentation in R/parse.R
 \name{read_one_bt_activity_file}
 \alias{read_one_bt_activity_file}
-\title{Read One BabyTime Activity File}
+\title{Read One 'BabyTime' Activity File}
 \usage{
 read_one_bt_activity_file(infile, list_db = NULL, verbose = FALSE)
 }
 \arguments{
 \item{infile}{a .zip or .txt file with the format activity_BabyName_yyyymm
-as the BabyTime app exports data.}
+as the 'BabyTime' app exports data.}
 
 \item{list_db}{a `Raw BT List DB` object on which to append data. If none exists, this
 will create a new `Raw BT List DB` object.}

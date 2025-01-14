@@ -2,7 +2,7 @@
 % Please edit documentation in R/loops.R
 \name{process_one_directory}
 \alias{process_one_directory}
-\title{Process One Directory of BabyTime Activity Files}
+\title{Process One Directory of 'BabyTime' Activity Files}
 \usage{
 process_one_directory(directory, remove_txts = TRUE, verbose = TRUE)
 }

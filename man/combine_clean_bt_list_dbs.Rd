@@ -2,7 +2,7 @@
 % Please edit documentation in R/parse.R
 \name{combine_clean_bt_list_dbs}
 \alias{combine_clean_bt_list_dbs}
-\title{Combine two Babylist List DBs}
+\title{Combine two 'Babylist' List DBs}
 \usage{
 combine_clean_bt_list_dbs(la, lb)
 }

@@ -1,4 +1,4 @@
-#' Process One Directory of BabyTime Activity Files
+#' Process One Directory of 'BabyTime' Activity Files
 #'
 #' Only works with with .zip files
 #'

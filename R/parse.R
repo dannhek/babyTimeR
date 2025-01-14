@@ -1,9 +1,9 @@
-#' Read One BabyTime Activity File
+#' Read One 'BabyTime' Activity File
 #'
 #' Read line-by-line and parse into a "database" in a list.
 #'
 #' @param infile a .zip or .txt file with the format activity_BabyName_yyyymm
-#'	as the BabyTime app exports data.
+#'	as the 'BabyTime' app exports data.
 #' @param list_db a `Raw BT List DB` object on which to append data. If none exists, this
 #'	will create a new `Raw BT List DB` object.
 #' @param verbose whether or not to write out progress messages.
@@ -38,7 +38,7 @@ read_one_bt_activity_file <- function(
 		infile <- gsub('\\.zip','.txt',infile)
 	}
 	if (!grepl('activity_[A-Za-z]*_20[0-9]{2}(0[1-9]|1[0-2])\\.(zip|txt)',basename(infile))) {
-		stop('Not a BabyTime Activity File\nMust be a file name "activity_BabyName_yyyymm.txt"')
+		stop('Not a \'BabyTime\' Activity File\nMust be a file name "activity_BabyName_yyyymm.txt"')
 	}
 	# Open Connection
 	con  <- file(infile, open = "r")
@@ -175,7 +175,7 @@ clean_bt_list_db <- function(list_db) {
 }
 
 
-#' Combine two Babylist List DBs
+#' Combine two 'Babylist' List DBs
 #'
 #' Generally not needed if you parse all files at once, but can be useful if
 #' combining data extracted at multiple times or across multiple directories
@@ -205,10 +205,10 @@ clean_bt_list_db <- function(list_db) {
 #' }
 combine_clean_bt_list_dbs <- function(la,lb) {
 	if (!methods::is(la, 'Clean BT List DB')) {
-		stop("First Parameter not a cleaned BabyTime List Database\nUse the output of `clean_bt_list_db`")
+		stop("First Parameter not a cleaned \'BabyTime\' List Database\nUse the output of `clean_bt_list_db`")
 	}
 	if (!methods::is(lb, 'Clean BT List DB')) {
-		stop("Second Parameter not a cleaned BabyTime List Database\nUse the output of `clean_bt_list_db`")
+		stop("Second Parameter not a cleaned \'BabyTime\' List Database\nUse the output of `clean_bt_list_db`")
 	}
 	lc <- list()
 	all_tables <- unique(c(names(la),names(lb)))
