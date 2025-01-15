@@ -1,4 +1,4 @@
-#' Sample Babytime Data List
+#' Sample 'BabyTime' Data List Database
 #'
 #' Sample output from `read_one_bt_activity_file` and `clean_bt_list_db`.
 #' A "Clean BT List DB" object.

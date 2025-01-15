@@ -24,6 +24,9 @@ data_dir <- system.file('extdata', package = 'babyTimeR')
 if (file.exists('parsed_data.RDS')) {
     baby_dann_db <- readRDS('parsed_data.RDS')
 } else {
-    baby_dann_db <- process_one_directory(data_dir)
+    baby_dann_db <- process_one_directory(
+        directory = data_dir,
+        remove_txts = FALSE
+    )
 }
 }
