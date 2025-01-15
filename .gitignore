@@ -2,7 +2,5 @@
 .Rhistory
 .RData
 .Ruserdata
-activity_*.txt
-activity_*.zip
 test_list_*.RDS
 revdep/
