@@ -3,7 +3,7 @@
 \docType{data}
 \name{bt_list_db}
 \alias{bt_list_db}
-\title{Sample Babytime Data List}
+\title{Sample 'BabyTime' Data List Database}
 \format{
 ## `bt_list_db`
 A "Clean BT List DB" object.

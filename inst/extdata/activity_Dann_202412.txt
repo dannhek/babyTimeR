@@ -1,0 +1,15 @@
+2024-11-27 05:41 AM ~ 2024-11-27 06:20 AM
+Type: Night Sleep
+Duration: 39 (min)
+====================
+2024-11-27 05:38 AM ~ 2024-11-27 05:58 AM
+Type: Pumping
+Duration: 20 (min)
+Pumping Total Amount(ml): 9.5 (fl_oz)
+Pumping Left Amount(ml): 4.5 (fl_oz)
+Pumping Right Amount(ml): 5 (fl_oz)
+====================
+2024-11-27 05:35 AM
+Type: Pumped Milk
+Pumped Milk Total Amount(ml): 5 (fl_oz)
+====================

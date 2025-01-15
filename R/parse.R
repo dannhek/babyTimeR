@@ -175,7 +175,7 @@ clean_bt_list_db <- function(list_db) {
 }
 
 
-#' Combine two 'Babylist' List DBs
+#' Combine two 'BabyTime' List Databases (DBs)
 #'
 #' Generally not needed if you parse all files at once, but can be useful if
 #' combining data extracted at multiple times or across multiple directories
@@ -189,20 +189,19 @@ clean_bt_list_db <- function(list_db) {
 #' @export
 #'
 #' @examples
-#' \donttest{
-#' baby_dann_db_may <- read_one_bt_activity_file(
-#'     infile = file.path('Data', 'activity_Dann_202305.zip')
+#' data_dir <- system.file('extdata', package = 'babyTimeR')
+#' baby_dann_db_nov <- read_one_bt_activity_file(
+#'     infile = file.path(data_dir, 'activity_Dann_202411.txt')
 #' ) |>
 #' clean_bt_list_db()
-#' baby_dann_db_june <- read_one_bt_activity_file(
-#'     infile = file.path('Data', 'activity_Dann_202306.zip')
+#' baby_dann_db_dec<- read_one_bt_activity_file(
+#'     infile = file.path(data_dir, 'activity_Dann_202412.txt')
 #' ) |>
 #' clean_bt_list_db()
 #' baby_dann_db <- combine_clean_bt_list_dbs(
-#'     baby_dann_db_may,
-#'     baby_dann_db_june
+#'     baby_dann_db_nov,
+#'     baby_dann_db_dec
 #' )
-#' }
 combine_clean_bt_list_dbs <- function(la,lb) {
 	if (!methods::is(la, 'Clean BT List DB')) {
 		stop("First Parameter not a cleaned \'BabyTime\' List Database\nUse the output of `clean_bt_list_db`")
